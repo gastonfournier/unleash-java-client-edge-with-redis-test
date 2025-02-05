@@ -34,6 +34,19 @@ cd java-cli
 ./gradlew run
 cd ..
 
+echo "Disabling the test flag: ${FLAG_NAME}"
+curl --location --request POST \
+    --header 'Authorization: *:*.unleash-insecure-admin-api-token' \
+    "http://localhost:4242/api/admin/projects/default/features/${FLAG_NAME}/environments/development/off"
+
+echo "Wait 2 seconds so the new flag change can be propagated to the edge"
+sleep 2
+
+echo "Runing test with java"
+cd java-cli
+./gradlew run
+cd ..
+
 echo ""
 echo "=================================================="
 echo "Test completed, you can see the results in the output above, expect to see the message: \"${FLAG_NAME} was true: 10000 of 10000\""
